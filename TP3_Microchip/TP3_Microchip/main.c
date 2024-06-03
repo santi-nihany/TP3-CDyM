@@ -1,18 +1,22 @@
-/*
- * TP3_Microchip.c
- *
- * Created: 3/6/2024 14:19:32
- * Author : Barcala
- */ 
-
 #include <avr/io.h>
+#include "DHT11.h"
+#include "lcd.h"
+#include <util/delay.h>
 
+#define F_CPU 16000000UL
 
 int main(void)
 {
-    /* Replace with your application code */
-    while (1) 
-    {
-    }
+	uint8_t * temperatura;
+	uint8_t * humedad;
+	_delay_ms(10);
+    LCD_Init();
+	_delay_ms(100);
+	DHT11_init();
+	DHT11_read(&temperatura,&humedad);
+	printf("%s",temperatura);
+	LCDstring(temperatura,strlen(temperatura));
+	LCDGotoXY(0,1);
+	LCDstring(humedad,strlen(humedad));
 }
 
