@@ -23,7 +23,7 @@ uint8_t DHT11_read(float *dht_temperatura, float *dht_humedad) {
 	DDRC &= ~(1<<PINC0);		//PINC0 como entrada
 	
 	//Paso 2 esperamos 20 a 40us hasta que el dht11 envie 0
-	 contador = 0;
+	contador = 0;
 	while(PINC & (1<<PINC0))
 	{
 		_delay_us(2);

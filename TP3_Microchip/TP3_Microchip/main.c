@@ -19,6 +19,7 @@ int main(void)
 	
 	
 	while (1) {
+		LCDstring(" Temp. ",strlen(" Temp. "));
 		uint8_t status = DHT11_read(&temperatura,&humedad);
 		if (status) {
 			

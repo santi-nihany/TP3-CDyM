@@ -18,9 +18,9 @@
 
 
 
-#define LCD_RS	1 	//define MCU pin connected to LCD RS
+#define LCD_RS	3 	//define MCU pin connected to LCD RS
 #define LCD_RW	1 	//define MCU pin connected to LCD R/W
-#define LCD_E	0	//define MCU pin connected to LCD E
+#define LCD_E	2	//define MCU pin connected to LCD E
 #define LCD_D0	0	//define MCU pin connected to LCD D0
 #define LCD_D1	1	//define MCU pin connected to LCD D1
 #define LCD_D2	2	//define MCU pin connected to LCD D1
