@@ -4,6 +4,7 @@
 #include <util/delay.h>
 
 #define F_CPU 16000000UL
+#define BAUD 9600
 
 int main(void)
 {
@@ -19,7 +20,6 @@ int main(void)
 	
 	
 	while (1) {
-		LCDstring(" Temp. ",strlen(" Temp. "));
 		uint8_t status = DHT11_read(&temperatura,&humedad);
 		if (status) {
 			
@@ -34,8 +34,8 @@ int main(void)
 			dtostrf(humedad, 2, 2, printbuff);
 			LCDstring(printbuff,strlen(printbuff));
 			LCDstring(" %",strlen(" %"));
-			_delay_ms(200);
 		}
+		_delay_ms(200);
 	}
 
 	
