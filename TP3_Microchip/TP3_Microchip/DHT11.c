@@ -4,19 +4,13 @@
  */
 #include <avr/io.h>
 #include <util/delay.h>
-#define F_CPU 16000000UL
-
 
 void DHT11_init(){
 	DDRC |= 0x01;		//PINC0 COMO SALIDA
 	PORTC |= 0x01;	// PORTC0 EN ALTO
-	_delay_ms(2);
-	PORTC &= (0<<PINC0);
-	_delay_ms(2);
-	PORTC |= (1<<PINC0);
 };
 
-uint8_t DHT11_read(uint8_t * temperatura, uint8_t * humedad ) {
+uint8_t DHT11_read(float *dht_temperatura, float *dht_humedad) {
 	uint8_t bytes[5];
 	uint8_t i,j=0;
 	uint8_t contador = 0;
@@ -88,8 +82,7 @@ uint8_t DHT11_read(uint8_t * temperatura, uint8_t * humedad ) {
 	}
 	
 	DHT11_init(); // REINICIALIZO SENSOR
-	printf(bytes[0]);
-	if ((uint8_t) (bytes[0] + bytes[1] + bytes[2] + bytes[3]) == bytes[4])		//Pregunta por el chekin
+	/*if ((uint8_t) (bytes[0] + bytes[1] + bytes[2] + bytes[3]) == bytes[4])		//Pregunta por el cheksum
 	{
 		char * t_decimal;
 		sprintf(temperatura, "%d", bytes[0]);
@@ -101,5 +94,23 @@ uint8_t DHT11_read(uint8_t * temperatura, uint8_t * humedad ) {
 		sprintf(h_decimal, "%d", bytes[3]);
 		strcat(humedad,".");
 		strcat(humedad,h_decimal);
+	}*/
+	
+	if ((uint8_t) (bytes[0] + bytes[1] + bytes[2] + bytes[3]) == bytes[4])		//Pregunta por el cheksum
+	{
+		uint16_t rawhumedad = bytes[0]<<8 | bytes[1];
+		uint16_t rawtemperatura = bytes[2] <<8 | bytes[3];
+		
+		
+		if (rawtemperatura & 0x8000)
+		{
+			*dht_temperatura = (float)((rawtemperatura & 0x7fff) / 10.0)* -1.0;
+			}else{
+			*dht_temperatura = (float)(rawtemperatura)/10.0;
+		}
+
+		*dht_humedad = (float)(rawhumedad)/10.0;
+
+		return 1;
 	}
 }

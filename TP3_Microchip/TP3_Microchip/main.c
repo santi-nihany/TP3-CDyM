@@ -7,16 +7,36 @@
 
 int main(void)
 {
-	uint8_t * temperatura;
-	uint8_t * humedad;
-	_delay_ms(10);
-    LCD_Init();
-	_delay_ms(100);
+	//uint8_t * temperatura;
+	//uint8_t * humedad;
+	char printbuff[10];
+	float temperatura;
+	float humedad;
 	DHT11_init();
-	DHT11_read(&temperatura,&humedad);
-	printf("%s",temperatura);
-	LCDstring(temperatura,strlen(temperatura));
-	LCDGotoXY(0,1);
-	LCDstring(humedad,strlen(humedad));
+	_delay_ms(10);
+	LCD_Init();
+	_delay_ms(100);
+	
+	
+	while (1) {
+		uint8_t status = DHT11_read(&temperatura,&humedad);
+		if (status) {
+			
+			LCDclr();
+			LCDstring(" Temp. ",strlen(" Temp. "));
+			dtostrf(temperatura, 2, 2, printbuff);
+			LCDstring(printbuff,strlen(printbuff));
+			LCDstring(" C",strlen(" C"));
+			
+			LCDGotoXY(0,1);
+			LCDstring(" Hume. ",strlen(" Hume. "));
+			dtostrf(humedad, 2, 2, printbuff);
+			LCDstring(printbuff,strlen(printbuff));
+			LCDstring(" %",strlen(" %"));
+			_delay_ms(200);
+		}
+	}
+
+	
 }
 
