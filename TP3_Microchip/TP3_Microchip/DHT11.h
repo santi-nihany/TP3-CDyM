@@ -5,4 +5,4 @@
  *  Author: Barcala
  */ 
 void DHT11_init();
-uint8_t DHT11_read(float *dht_temperatura, float *dht_humedad);
+uint8_t DHT11_read(uint8_t *temperatura_int, uint8_t *temperatura_dec, uint8_t *humedad_int, uint8_t *humedad_dec);
