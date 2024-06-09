@@ -1,25 +1,27 @@
+#ifndef RTC_H_
+#define RTC_H_
+
+#include <avr/io.h>
 #include "I2C.h"
 
-typedef struct
-{
+typedef struct {
 	uint8_t Second;  /* 0..59 */
 	uint8_t Minute;  /* 0..59 */
 	uint8_t Hour;    /* 0..23 */
 } Hora_t;
 
-typedef struct
-{
+typedef struct {
 	uint8_t Day;     /* 1..31 */
 	uint8_t Month;   /* 1..12 */
 	uint8_t Year;    /* 00..99 */
 } Fecha_t;
 
-typedef struct
-{
+typedef struct {
 	Hora_t hora;
 	Fecha_t fecha;
 } RTC_t;
 
+#define DS3231_ADDRESS 0x68
 #define DS3231_SECONDS 0x00
 #define DS3231_MINUTES 0x01
 #define DS3231_HOURS 0x02
@@ -36,19 +38,22 @@ typedef struct
 #define MASK_MES 0b00011111
 #define MASK_YEAR 0b11111111
 
-#define DS3231_READ 0b10100001
-#define DS3231_WRITE 0b10100000
-#define DS3231_ADDRESS 0x68
+#define DS3231_READ (DS3231_ADDRESS << 1) | 0x01
+#define DS3231_WRITE (DS3231_ADDRESS << 1)
 
-void RTC_Init();
+void RTC_Init(void);
+uint8_t DS3231_GetReg(uint8_t address);
+void DS3231_SetReg(uint8_t address, uint8_t val);
 
-uint8_t DS3231_GetReg(uint8_t );
-void DS3231_SetReg(uint8_t, uint8_t );
+void RTC_SetHora(Hora_t *hora);
+void RTC_SetFecha(Fecha_t *fecha);
+void RTC_GetHora(Hora_t *hora);
+void RTC_GetFecha(Fecha_t *fecha);
 
-void RTC_SetHora (Hora_t* );
-void RTC_SetFecha(Fecha_t* );
-void RTC_GetHora (Hora_t* );
-void RTC_GetFecha(Fecha_t* );
+void RTC_GetTime(RTC_t *rtc);
+void RTC_SetTime(RTC_t *rtc);
 
-void RTC_GetTime(RTC_t* );
-void RTC_SetTime(RTC_t* );
+uint8_t dec_to_bcd(uint8_t val);
+uint8_t bcd_to_dec(uint8_t val);
+
+#endif /* RTC_H_ */

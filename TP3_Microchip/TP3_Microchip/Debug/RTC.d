@@ -1,4 +1,4 @@
-RTC.d RTC.o: .././RTC.c .././RTC.h .././I2C.h \
+RTC.d RTC.o: .././RTC.c .././RTC.h \
  g:\microchipstudio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h \
  g:\microchipstudio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
  g:\microchipstudio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\inttypes.h \
@@ -9,11 +9,10 @@ RTC.d RTC.o: .././RTC.c .././RTC.h .././I2C.h \
  g:\microchipstudio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\common.h \
  g:\microchipstudio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\version.h \
  g:\microchipstudio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\fuse.h \
- g:\microchipstudio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h
+ g:\microchipstudio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h \
+ .././I2C.h
 
 .././RTC.h:
-
-.././I2C.h:
 
 g:\microchipstudio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h:
 
@@ -36,3 +35,5 @@ g:\microchipstudio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\version
 g:\microchipstudio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\fuse.h:
 
 g:\microchipstudio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h:
+
+.././I2C.h:
