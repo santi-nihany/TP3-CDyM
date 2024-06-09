@@ -19,7 +19,7 @@ main.d main.o: .././main.c \
  g:\microchipstudio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\setbaud.h \
  .././UART.h .././DHT11.h .././lcd.h \
  g:\microchipstudio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\pgmspace.h \
- .././utils.h
+ .././utils.h .././RTC.h .././I2C.h
 
 g:\microchipstudio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h:
 
@@ -66,3 +66,7 @@ g:\microchipstudio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\setbau
 g:\microchipstudio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\pgmspace.h:
 
 .././utils.h:
+
+.././RTC.h:
+
+.././I2C.h:

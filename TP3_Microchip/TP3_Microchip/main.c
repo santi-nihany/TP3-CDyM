@@ -10,6 +10,7 @@
 #include "DHT11.h"
 #include "lcd.h"
 #include "utils.h"
+#include "RTC.h"
 
 
 int main(void)

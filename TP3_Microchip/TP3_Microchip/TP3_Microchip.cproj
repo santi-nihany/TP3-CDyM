@@ -126,6 +126,12 @@
     <Compile Include="DHT11.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="I2C.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="I2C.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="lcd.c">
       <SubType>compile</SubType>
     </Compile>
@@ -133,6 +139,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="RTC.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="RTC.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="UART.h">

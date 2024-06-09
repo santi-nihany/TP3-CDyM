@@ -4,9 +4,13 @@
 
 DHT11.c
 
+I2C.c
+
 lcd.c
 
 main.c
+
+RTC.c
 
 utils.c
 
