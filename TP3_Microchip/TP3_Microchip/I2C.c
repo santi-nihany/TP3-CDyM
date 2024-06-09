@@ -17,9 +17,6 @@ uint8_t I2C_ReStart( void )
 
 	while ( !(TWCR & (1<<TWINT)) );
 
-	if ( (TWSR & 0xF8) != TW_REP_START )
-	return 0;
-
 	return 1;
 }
 

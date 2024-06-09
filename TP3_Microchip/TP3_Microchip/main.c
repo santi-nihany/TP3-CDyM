@@ -27,12 +27,27 @@ int main(void)
 	LCD_Init();
 	_delay_ms(100);
 	
+	RTC_t currentTime;
+	currentTime.hora.Second = 0;
+	currentTime.hora.Minute = 0;
+	currentTime.hora.Hour = 12;
+	currentTime.fecha.Day = 1;
+	currentTime.fecha.Month = 1;
+	currentTime.fecha.Year = 23;
+	RTC_Init();
+	
+	RTC_SetTime(&currentTime);
+	
+	
 	while (1) {
+		RTC_GetTime(&currentTime);
+		printf("%d/%d/%d\n %d:%d:%d\r",currentTime.fecha.Day,currentTime.fecha.Month,currentTime.fecha.Year,currentTime.hora.Hour,currentTime.hora.Minute,currentTime.hora.Second);
+		
 		uint8_t status = DHT11_read(&temperatura_int, &temperatura_dec ,&humedad_int, &humedad_dec );
 		if (status) {
 			LCDclr();
-			printf("Temperatura = %d.%d\n\r", temperatura_int, temperatura_dec);
-			printf("Humedad = %d.%d\n\r", humedad_int, humedad_dec);
+			//printf("Temperatura = %d.%d\n\r", temperatura_int, temperatura_dec);
+			//printf("Humedad = %d.%d\n\r", humedad_int, humedad_dec);
 			
 			LCDGotoXY(0,0);
 			LCDstring("Temp: ",strlen("Temp: "));

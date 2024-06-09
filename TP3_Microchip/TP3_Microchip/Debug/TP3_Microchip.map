@@ -43,6 +43,11 @@ Discarded input sections
  .text          0x00000000        0x0 DHT11.o
  .data          0x00000000        0x0 DHT11.o
  .bss           0x00000000        0x0 DHT11.o
+ .text          0x00000000        0x0 I2C.o
+ .data          0x00000000        0x0 I2C.o
+ .bss           0x00000000        0x0 I2C.o
+ .text.I2C_ReStart
+                0x00000000       0x12 I2C.o
  .text          0x00000000        0x0 lcd.o
  .data          0x00000000        0x0 lcd.o
  .bss           0x00000000        0x0 lcd.o
@@ -80,6 +85,13 @@ Discarded input sections
                 0x00000000       0x12 main.o
  .text.UART_write_txt
                 0x00000000       0x1a main.o
+ .text          0x00000000        0x0 RTC.o
+ .data          0x00000000        0x0 RTC.o
+ .bss           0x00000000        0x0 RTC.o
+ .text.DS3231_GetReg
+                0x00000000       0x30 RTC.o
+ .text.DS3231_SetReg
+                0x00000000       0x28 RTC.o
  .text          0x00000000        0x0 utils.o
  .data          0x00000000        0x0 utils.o
  .bss           0x00000000        0x0 utils.o
@@ -258,8 +270,10 @@ Linker script and memory map
 Address of section .data set to 0x800100
 LOAD G:/MicrochipStudio/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
 LOAD DHT11.o
+LOAD I2C.o
 LOAD lcd.o
 LOAD main.o
+LOAD RTC.o
 LOAD utils.o
 START GROUP
 LOAD g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a
@@ -370,7 +384,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0xf02
+.text           0x00000000     0x10b6
  *(.vectors)
  .vectors       0x00000000       0x68 G:/MicrochipStudio/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
                 0x00000000                __vector_default
@@ -466,80 +480,116 @@ END GROUP
  .text.DHT11_read
                 0x000000f4      0x174 DHT11.o
                 0x000000f4                DHT11_read
+ .text.I2C_Init
+                0x00000268       0x12 I2C.o
+                0x00000268                I2C_Init
+ .text.I2C_Start
+                0x0000027a       0x10 I2C.o
+                0x0000027a                I2C_Start
+ .text.I2C_Write
+                0x0000028a       0x14 I2C.o
+                0x0000028a                I2C_Write
+ .text.I2C_Read
+                0x0000029e       0x20 I2C.o
+                0x0000029e                I2C_Read
+ .text.I2C_Stop
+                0x000002be        0x8 I2C.o
+                0x000002be                I2C_Stop
  .text.LCDsendChar
-                0x00000268      0x130 lcd.o
-                0x00000268                LCDsendChar
+                0x000002c6      0x130 lcd.o
+                0x000002c6                LCDsendChar
  .text.LCDsendCommand
-                0x00000398      0x128 lcd.o
-                0x00000398                LCDsendCommand
- .text.LCDclr   0x000004c0        0x8 lcd.o
-                0x000004c0                LCDclr
- .text.LCDhome  0x000004c8        0x8 lcd.o
-                0x000004c8                LCDhome
+                0x000003f6      0x128 lcd.o
+                0x000003f6                LCDsendCommand
+ .text.LCDclr   0x0000051e        0x8 lcd.o
+                0x0000051e                LCDclr
+ .text.LCDhome  0x00000526        0x8 lcd.o
+                0x00000526                LCDhome
  .text.LCDstring
-                0x000004d0       0x30 lcd.o
-                0x000004d0                LCDstring
+                0x0000052e       0x30 lcd.o
+                0x0000052e                LCDstring
  .text.LCDGotoXY
-                0x00000500       0x1e lcd.o
-                0x00000500                LCDGotoXY
+                0x0000055e       0x1e lcd.o
+                0x0000055e                LCDGotoXY
  .text.LCDdefinechar
-                0x0000051e       0x54 lcd.o
-                0x0000051e                LCDdefinechar
- .text.LCDinit  0x00000572       0xfe lcd.o
-                0x00000572                LCDinit
+                0x0000057c       0x54 lcd.o
+                0x0000057c                LCDdefinechar
+ .text.LCDinit  0x000005d0       0xfe lcd.o
+                0x000005d0                LCDinit
  .text.LCDescribeDato
-                0x00000670       0xc0 lcd.o
-                0x00000670                LCDescribeDato
+                0x000006ce       0xc0 lcd.o
+                0x000006ce                LCDescribeDato
  .text.LCD_Init
-                0x00000730        0xe lcd.o
-                0x00000730                LCD_Init
+                0x0000078e        0xe lcd.o
+                0x0000078e                LCD_Init
  .text.UART_init
-                0x0000073e       0x34 main.o
-                0x0000073e                UART_init
+                0x0000079c       0x34 main.o
+                0x0000079c                UART_init
  .text.UART_write
-                0x00000772        0xe main.o
-                0x00000772                UART_write
+                0x000007d0        0xe main.o
+                0x000007d0                UART_write
  .text.USART_printCHAR
-                0x00000780        0xa main.o
-                0x00000780                USART_printCHAR
- .text.main     0x0000078a      0x168 main.o
-                0x0000078a                main
+                0x000007de        0xa main.o
+                0x000007de                USART_printCHAR
+ .text.main     0x000007e8      0x196 main.o
+                0x000007e8                main
+ .text.RTC_Init
+                0x0000097e        0x6 RTC.o
+                0x0000097e                RTC_Init
+ .text.RTC_SetHora
+                0x00000984       0x32 RTC.o
+                0x00000984                RTC_SetHora
+ .text.RTC_SetFecha
+                0x000009b6       0x32 RTC.o
+                0x000009b6                RTC_SetFecha
+ .text.RTC_GetHora
+                0x000009e8       0x48 RTC.o
+                0x000009e8                RTC_GetHora
+ .text.RTC_GetFecha
+                0x00000a30       0x46 RTC.o
+                0x00000a30                RTC_GetFecha
+ .text.RTC_GetTime
+                0x00000a76       0x18 RTC.o
+                0x00000a76                RTC_GetTime
+ .text.RTC_SetTime
+                0x00000a8e       0x18 RTC.o
+                0x00000a8e                RTC_SetTime
  .text.libgcc.div
-                0x000008f2       0x28 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodhi4.o)
-                0x000008f2                _div
-                0x000008f2                __divmodhi4
+                0x00000aa6       0x28 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodhi4.o)
+                0x00000aa6                _div
+                0x00000aa6                __divmodhi4
  .text.libgcc.div
-                0x0000091a       0x28 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodhi4.o)
-                0x0000091a                __udivmodhi4
+                0x00000ace       0x28 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodhi4.o)
+                0x00000ace                __udivmodhi4
  .text.avr-libc
-                0x00000942       0x2c g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(printf.o)
-                0x00000942                printf
+                0x00000af6       0x2c g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(printf.o)
+                0x00000af6                printf
  .text.avr-libc
-                0x0000096e      0x3c2 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(vfprintf_std.o)
-                0x0000096e                vfprintf
+                0x00000b22      0x3c2 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(vfprintf_std.o)
+                0x00000b22                vfprintf
  .text.avr-libc
-                0x00000d30       0x16 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(strnlen_P.o)
-                0x00000d30                strnlen_P
+                0x00000ee4       0x16 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(strnlen_P.o)
+                0x00000ee4                strnlen_P
  .text.avr-libc
-                0x00000d46       0x16 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(strnlen.o)
-                0x00000d46                strnlen
+                0x00000efa       0x16 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(strnlen.o)
+                0x00000efa                strnlen
  .text.avr-libc
-                0x00000d5c       0x78 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(fputc.o)
-                0x00000d5c                fputc
+                0x00000f10       0x78 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(fputc.o)
+                0x00000f10                fputc
  .text.avr-libc
-                0x00000dd4       0xbc g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(ultoa_invert.o)
-                0x00000dd4                __ultoa_invert
+                0x00000f88       0xbc g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(ultoa_invert.o)
+                0x00000f88                __ultoa_invert
  .text.libgcc.prologue
-                0x00000e90       0x38 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_prologue.o)
-                0x00000e90                __prologue_saves__
+                0x00001044       0x38 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_prologue.o)
+                0x00001044                __prologue_saves__
  .text.libgcc.prologue
-                0x00000ec8       0x36 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_epilogue.o)
-                0x00000ec8                __epilogue_restores__
-                0x00000efe                . = ALIGN (0x2)
+                0x0000107c       0x36 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_epilogue.o)
+                0x0000107c                __epilogue_restores__
+                0x000010b2                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000efe        0x0 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
-                0x00000efe                _exit
-                0x00000efe                exit
+ .fini9         0x000010b2        0x0 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x000010b2                _exit
+                0x000010b2                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -558,11 +608,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000efe        0x4 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x000010b2        0x4 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x00000f02                _etext = .
+                0x000010b6                _etext = .
 
-.data           0x00800100       0x5a load address 0x00000f02
+.data           0x00800100       0x46 load address 0x000010b6
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -572,29 +622,29 @@ END GROUP
  *(.rodata)
  *(.rodata*)
  .rodata.str1.1
-                0x0080010e       0x4b main.o
+                0x0080010e       0x37 main.o
  *(.gnu.linkonce.r*)
-                0x0080015a                . = ALIGN (0x2)
- *fill*         0x00800159        0x1 
-                0x0080015a                _edata = .
-                0x0080015a                PROVIDE (__data_end, .)
+                0x00800146                . = ALIGN (0x2)
+ *fill*         0x00800145        0x1 
+                0x00800146                _edata = .
+                0x00800146                PROVIDE (__data_end, .)
 
-.bss            0x0080015a        0x6
-                0x0080015a                PROVIDE (__bss_start, .)
+.bss            0x00800146        0x6
+                0x00800146                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
  *(COMMON)
- COMMON         0x0080015a        0x6 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(iob.o)
-                0x0080015a                __iob
-                0x00800160                PROVIDE (__bss_end, .)
-                0x00000f02                __data_load_start = LOADADDR (.data)
-                0x00000f5c                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00800146        0x6 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(iob.o)
+                0x00800146                __iob
+                0x0080014c                PROVIDE (__bss_end, .)
+                0x000010b6                __data_load_start = LOADADDR (.data)
+                0x000010fc                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800160        0x0
+.noinit         0x0080014c        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x00800160                _end = .
+                0x0080014c                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -638,8 +688,10 @@ END GROUP
  *(.comment)
  .comment       0x00000000       0x30 DHT11.o
                                  0x31 (size before relaxing)
+ .comment       0x00000030       0x31 I2C.o
  .comment       0x00000030       0x31 lcd.o
  .comment       0x00000030       0x31 main.o
+ .comment       0x00000030       0x31 RTC.o
  .comment       0x00000030       0x31 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(iob.o)
  .comment       0x00000030       0x31 g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(printf.o)
  .comment       0x00000030       0x2c g:/microchipstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(vfprintf_std.o)
@@ -666,60 +718,78 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000      0x138
+.debug_aranges  0x00000000      0x1e0
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x28 DHT11.o
  .debug_aranges
-                0x00000028       0xc8 lcd.o
+                0x00000028       0x48 I2C.o
  .debug_aranges
-                0x000000f0       0x48 main.o
+                0x00000070       0xc8 lcd.o
+ .debug_aranges
+                0x00000138       0x48 main.o
+ .debug_aranges
+                0x00000180       0x60 RTC.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x1b5b
+.debug_info     0x00000000     0x2370
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x5f4 G:/MicrochipStudio/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_info    0x000005f4      0x2fa DHT11.o
- .debug_info    0x000008ee      0xbb7 lcd.o
- .debug_info    0x000014a5      0x6b6 main.o
+ .debug_info    0x000008ee      0x120 I2C.o
+ .debug_info    0x00000a0e      0xbb7 lcd.o
+ .debug_info    0x000015c5      0x7c3 main.o
+ .debug_info    0x00001d88      0x5e8 RTC.o
 
-.debug_abbrev   0x00000000      0xc0a
+.debug_abbrev   0x00000000      0xe06
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x5a2 G:/MicrochipStudio/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_abbrev  0x000005a2      0x16b DHT11.o
- .debug_abbrev  0x0000070d      0x251 lcd.o
- .debug_abbrev  0x0000095e      0x2ac main.o
+ .debug_abbrev  0x0000070d       0xc6 I2C.o
+ .debug_abbrev  0x000007d3      0x251 lcd.o
+ .debug_abbrev  0x00000a24      0x2b9 main.o
+ .debug_abbrev  0x00000cdd      0x129 RTC.o
 
-.debug_line     0x00000000      0xcc9
+.debug_line     0x00000000     0x10ce
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x134 G:/MicrochipStudio/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_line    0x00000134      0x248 DHT11.o
- .debug_line    0x0000037c      0x6a0 lcd.o
- .debug_line    0x00000a1c      0x2ad main.o
+ .debug_line    0x0000037c      0x15d I2C.o
+ .debug_line    0x000004d9      0x6a0 lcd.o
+ .debug_line    0x00000b79      0x2e6 main.o
+ .debug_line    0x00000e5f      0x26f RTC.o
 
-.debug_frame    0x00000000      0x344
+.debug_frame    0x00000000      0x4b8
  *(.debug_frame)
  .debug_frame   0x00000000       0x78 DHT11.o
- .debug_frame   0x00000078      0x23c lcd.o
- .debug_frame   0x000002b4       0x90 main.o
+ .debug_frame   0x00000078       0x74 I2C.o
+ .debug_frame   0x000000ec      0x23c lcd.o
+ .debug_frame   0x00000328       0x90 main.o
+ .debug_frame   0x000003b8      0x100 RTC.o
 
-.debug_str      0x00000000      0x680
+.debug_str      0x00000000      0x799
  *(.debug_str)
  .debug_str     0x00000000      0x208 G:/MicrochipStudio/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_str     0x00000208      0x21e DHT11.o
                                 0x25e (size before relaxing)
- .debug_str     0x00000426      0x1a4 lcd.o
+ .debug_str     0x00000426       0x4d I2C.o
+                                0x1d7 (size before relaxing)
+ .debug_str     0x00000473      0x1a4 lcd.o
                                 0x3a6 (size before relaxing)
- .debug_str     0x000005ca       0xb6 main.o
-                                0x313 (size before relaxing)
+ .debug_str     0x00000617      0x121 main.o
+                                0x37e (size before relaxing)
+ .debug_str     0x00000738       0x61 RTC.o
+                                0x280 (size before relaxing)
 
-.debug_loc      0x00000000     0x1394
+.debug_loc      0x00000000     0x179e
  *(.debug_loc)
  .debug_loc     0x00000000      0x39f DHT11.o
- .debug_loc     0x0000039f      0xe19 lcd.o
- .debug_loc     0x000011b8      0x1dc main.o
+ .debug_loc     0x0000039f       0x67 I2C.o
+ .debug_loc     0x00000406      0xe19 lcd.o
+ .debug_loc     0x0000121f      0x223 main.o
+ .debug_loc     0x00001442      0x35c RTC.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -739,11 +809,13 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000      0x120
+.debug_ranges   0x00000000      0x1a8
  *(.debug_ranges)
  .debug_ranges  0x00000000       0x30 DHT11.o
- .debug_ranges  0x00000030       0xb8 lcd.o
- .debug_ranges  0x000000e8       0x38 main.o
+ .debug_ranges  0x00000030       0x38 I2C.o
+ .debug_ranges  0x00000068       0xb8 lcd.o
+ .debug_ranges  0x00000120       0x38 main.o
+ .debug_ranges  0x00000158       0x50 RTC.o
 
 .debug_macro
  *(.debug_macro)
