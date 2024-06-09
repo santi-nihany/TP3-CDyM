@@ -35,7 +35,7 @@ unsigned char UART_read(){
 		return UDR0;			//devuelve el dato almacenado en el registro UDR0
 	}
 	else
-	return 0;
+		return 0;
 }
 
 void UART_write(unsigned char caracter){

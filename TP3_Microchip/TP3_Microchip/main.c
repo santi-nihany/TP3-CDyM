@@ -14,10 +14,14 @@
 
 int main(void)
 {
+	/* variables sensor dht11 */
 	uint8_t temperatura_int;
 	uint8_t temperatura_dec;
 	uint8_t humedad_int;
 	uint8_t humedad_dec;
+	
+	/* variables UART */
+	unsigned char c;
 	
 	DHT11_init();
 	UART_init();
@@ -28,11 +32,24 @@ int main(void)
 	
 	while (1) {
 		uint8_t status = DHT11_read(&temperatura_int, &temperatura_dec ,&humedad_int, &humedad_dec );
+		c = UART_read();
+		if(c != 0) {
+			printf("Caracter: %c\n\r", c);
+			if((c == 's') || (c == 'S')){
+				do 
+				{
+					c = UART_read();
+				} while ((c != 's') && (c!= 'S'));
+			}
+		}
+		
 		if (status) {
 			LCDclr();
+			// Escritura en PC
 			printf("Temperatura = %d.%d\n\r", temperatura_int, temperatura_dec);
 			printf("Humedad = %d.%d\n\r", humedad_int, humedad_dec);
 			
+			// Escritura LCD Display
 			LCDGotoXY(0,0);
 			LCDstring("Temp: ",strlen("Temp: "));
 			LCDescribeDato(temperatura_int,2);
@@ -45,18 +62,13 @@ int main(void)
 			LCDstring(".",strlen("."));
 			LCDescribeDato(humedad_dec,2);
 			LCDstring(" %",strlen(" %"));
-			
-			_delay_ms(100);
-			/*sprintf(temperatura_int, "%d", temperatura_int);
-			sprintf(humedad_int, "%d", humedad_int);
-			Sol_error();
-			escribir(temperatura_int, humedad_int);*/
 		} else {
 			printf("ERROR\n\r");
 			LCDclr();
 			_delay_ms(100);
 			LCDstring("ERROR", 5);
-		}
+		} 
+		
 		_delay_ms(2000);
 	}
 
