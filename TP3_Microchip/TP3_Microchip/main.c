@@ -28,16 +28,15 @@ int main(void)
 	_delay_ms(100);
 	
 	RTC_t currentTime;
-	currentTime.hora.Second = dec_to_bcd(1);    // 0 segundos
-	currentTime.hora.Minute = dec_to_bcd(1);    // 0 minutos
-	currentTime.hora.Hour = dec_to_bcd(12);     // 12 horas (mediodía)
-	currentTime.fecha.Day = dec_to_bcd(9);      // 9 del mes
-	currentTime.fecha.Month = dec_to_bcd(6);  // Junio (mes 6)
+	currentTime.hora.Second = dec_to_bcd(1); 
+	currentTime.hora.Minute = dec_to_bcd(1); 
+	currentTime.hora.Hour = dec_to_bcd(12);   
+	currentTime.fecha.Day = dec_to_bcd(9);
+	currentTime.fecha.Month = dec_to_bcd(6);
 	currentTime.fecha.Year = dec_to_bcd(24);
 	RTC_Init();
 	_delay_ms(10);
 	RTC_SetTime(&currentTime);
-	RTC_SetFecha(&currentTime.fecha);
 	
 	
 	while (1) {
