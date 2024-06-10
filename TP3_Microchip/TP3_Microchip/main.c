@@ -19,6 +19,8 @@ int main(void)
 	uint8_t temperatura_dec;
 	uint8_t humedad_int;
 	uint8_t humedad_dec;
+	unsigned char c;
+	RTC_t currentTime;
 	
 	DHT11_init();
 	UART_init();
@@ -27,7 +29,7 @@ int main(void)
 	LCD_Init();
 	_delay_ms(100);
 	
-	RTC_t currentTime;
+	
 	currentTime.hora.Second = dec_to_bcd(1); 
 	currentTime.hora.Minute = dec_to_bcd(1); 
 	currentTime.hora.Hour = dec_to_bcd(12);   
@@ -38,7 +40,7 @@ int main(void)
 	_delay_ms(10);
 	RTC_SetTime(&currentTime);
 	
-	
+	printf("Ingrese 's' o 'S' para parar/reanudar \n\r");
 	while (1) {
 		RTC_GetTime(&currentTime);
 		uint8_t day = bcd_to_dec(currentTime.fecha.Day);
@@ -47,16 +49,25 @@ int main(void)
 		uint8_t hour = bcd_to_dec(currentTime.hora.Hour);
 		uint8_t minute = currentTime.hora.Minute;
 		uint8_t second = currentTime.hora.Second;
-
-		// Imprimir la fecha y hora en formato legible
-		printf("%02d/%02d/%02d\n %02d:%02d:%02d\r", day, month, year, hour, minute, second);
 		
 		uint8_t status = DHT11_read(&temperatura_int, &temperatura_dec ,&humedad_int, &humedad_dec );
+		
+		c = UART_read();
+		if(c != 0) {
+			if((c == 's') || (c == 'S')){
+				do
+				{
+					c = UART_read();
+				} while ((c != 's') && (c!= 'S'));
+			}
+		}
+		
 		if (status) {
 			LCDclr();
-			//printf("Temperatura = %d.%d\n\r", temperatura_int, temperatura_dec);
-			//printf("Humedad = %d.%d\n\r", humedad_int, humedad_dec);
+			// Escritura en PC
+			printf("TEMP: %d C HUM: %d %% FECHA: %02d/%02d/%02d HORA: %02d:%02d:%02d\n\r",temperatura_int, humedad_int, day, month, year, hour, minute, second);
 			
+			// Escritura LCD Display
 			LCDGotoXY(0,0);
 			LCDstring("Temp: ",strlen("Temp: "));
 			LCDescribeDato(temperatura_int,2);
@@ -69,18 +80,13 @@ int main(void)
 			LCDstring(".",strlen("."));
 			LCDescribeDato(humedad_dec,2);
 			LCDstring(" %",strlen(" %"));
-			
-			_delay_ms(100);
-			/*sprintf(temperatura_int, "%d", temperatura_int);
-			sprintf(humedad_int, "%d", humedad_int);
-			Sol_error();
-			escribir(temperatura_int, humedad_int);*/
-		} else {
+			} else {
 			printf("ERROR\n\r");
 			LCDclr();
 			_delay_ms(100);
 			LCDstring("ERROR", 5);
 		}
+		
 		_delay_ms(2000);
 	}
 
