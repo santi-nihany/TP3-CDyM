@@ -1,4 +1,5 @@
 #include "RTC.h"
+#include "I2C.h"
 
 uint8_t bcd_to_dec(uint8_t val) {
 	return ((val / 16 * 10) + (val % 16));

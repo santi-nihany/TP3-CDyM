@@ -12,5 +12,7 @@ main.c
 
 RTC.c
 
+serialPort.c
+
 utils.c
 
