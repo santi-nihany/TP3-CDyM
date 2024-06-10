@@ -28,15 +28,16 @@ int main(void)
 	_delay_ms(100);
 	
 	RTC_t currentTime;
-	currentTime.hora.Second = dec_to_bcd(0);    // 0 segundos
-	currentTime.hora.Minute = dec_to_bcd(0);    // 0 minutos
+	currentTime.hora.Second = dec_to_bcd(1);    // 0 segundos
+	currentTime.hora.Minute = dec_to_bcd(1);    // 0 minutos
 	currentTime.hora.Hour = dec_to_bcd(12);     // 12 horas (mediodía)
 	currentTime.fecha.Day = dec_to_bcd(9);      // 9 del mes
-	currentTime.fecha.Month = dec_to_bcd(6);    // Junio (mes 6)
+	currentTime.fecha.Month = dec_to_bcd(6);  // Junio (mes 6)
 	currentTime.fecha.Year = dec_to_bcd(24);
 	RTC_Init();
-	
+	_delay_ms(10);
 	RTC_SetTime(&currentTime);
+	RTC_SetFecha(&currentTime.fecha);
 	
 	
 	while (1) {
@@ -45,8 +46,8 @@ int main(void)
 		uint8_t month = bcd_to_dec(currentTime.fecha.Month);
 		uint8_t year = bcd_to_dec(currentTime.fecha.Year);
 		uint8_t hour = bcd_to_dec(currentTime.hora.Hour);
-		uint8_t minute = bcd_to_dec(currentTime.hora.Minute);
-		uint8_t second = bcd_to_dec(currentTime.hora.Second);
+		uint8_t minute = currentTime.hora.Minute;
+		uint8_t second = currentTime.hora.Second;
 
 		// Imprimir la fecha y hora en formato legible
 		printf("%02d/%02d/%02d\n %02d:%02d:%02d\r", day, month, year, hour, minute, second);

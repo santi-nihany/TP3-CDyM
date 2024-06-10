@@ -36,9 +36,9 @@ void RTC_SetHora(Hora_t *hora) {
 	I2C_Start();
 	I2C_Write(DS3231_WRITE);
 	I2C_Write(DS3231_SECONDS);
-	I2C_Write(dec_to_bcd(hora->Second) & MASK_SEC);
-	I2C_Write(dec_to_bcd(hora->Minute) & MASK_MIN);
-	I2C_Write(dec_to_bcd(hora->Hour) & MASK_HORA);
+	I2C_Write(hora->Second & MASK_SEC);
+	I2C_Write(hora->Minute & MASK_MIN);
+	I2C_Write(hora->Hour & MASK_HORA);
 	I2C_Stop();
 }
 
@@ -46,9 +46,9 @@ void RTC_SetFecha(Fecha_t *fecha) {
 	I2C_Start();
 	I2C_Write(DS3231_WRITE);
 	I2C_Write(DS3231_DAYS);
-	I2C_Write(dec_to_bcd(fecha->Day) & MASK_DAY);
-	I2C_Write(dec_to_bcd(fecha->Month) & MASK_MES);
-	I2C_Write(dec_to_bcd(fecha->Year) & MASK_YEAR);
+	I2C_Write(fecha->Day & MASK_DAY);
+	I2C_Write(fecha->Month & MASK_MES);
+	I2C_Write(fecha->Year & MASK_YEAR);
 	I2C_Stop();
 }
 
@@ -58,9 +58,9 @@ void RTC_GetHora(Hora_t *hora) {
 	I2C_Write(DS3231_SECONDS);
 	I2C_ReStart();
 	I2C_Write(DS3231_READ);
-	hora->Second = bcd_to_dec(I2C_Read(ACK) & MASK_SEC);
-	hora->Minute = bcd_to_dec(I2C_Read(ACK) & MASK_MIN);
-	hora->Hour = bcd_to_dec(I2C_Read(NACK) & MASK_HORA);
+	hora->Second = (I2C_Read(NACK)) & MASK_SEC;
+	hora->Minute = (I2C_Read(NACK)) & MASK_MIN;
+	hora->Hour = (I2C_Read(ACK)) & MASK_HORA;
 	I2C_Stop();
 }
 
@@ -70,9 +70,9 @@ void RTC_GetFecha(Fecha_t *fecha) {
 	I2C_Write(DS3231_DAYS);
 	I2C_ReStart();
 	I2C_Write(DS3231_READ);
-	fecha->Day = bcd_to_dec(I2C_Read(ACK) & MASK_DAY);
-	fecha->Month = bcd_to_dec(I2C_Read(ACK) & MASK_MES);
-	fecha->Year = bcd_to_dec(I2C_Read(NACK) & MASK_YEAR);
+	fecha->Day = (I2C_Read(NACK)) & MASK_DAY;
+	fecha->Month = (I2C_Read(NACK)) & MASK_MES;
+	fecha->Year = (I2C_Read(ACK)) & MASK_YEAR;
 	I2C_Stop();
 }
 
