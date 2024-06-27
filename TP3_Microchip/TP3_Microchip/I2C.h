@@ -13,7 +13,6 @@
 
 void I2C_Init(void);
 void I2C_Start(void);
-uint8_t I2C_ReStart(void);
 void I2C_Write(unsigned char data);
 unsigned char I2C_Read(unsigned char isLast);
 void I2C_Stop();

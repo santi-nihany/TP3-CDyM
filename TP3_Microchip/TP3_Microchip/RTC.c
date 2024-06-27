@@ -37,7 +37,7 @@ void RTC_GetHora(Hora_t *hora) {
 	I2C_Start();
 	I2C_Write(DS3231_WRITE);
 	I2C_Write(DS3231_SECONDS);
-	I2C_ReStart();
+	I2C_Start();
 	I2C_Write(DS3231_READ);
 	hora->Second = (I2C_Read(NACK)) & MASK_SEC;
 	hora->Minute = (I2C_Read(NACK)) & MASK_MIN;
@@ -49,7 +49,7 @@ void RTC_GetFecha(Fecha_t *fecha) {
 	I2C_Start();
 	I2C_Write(DS3231_WRITE);
 	I2C_Write(DS3231_DAYS);
-	I2C_ReStart();
+	I2C_Start();
 	I2C_Write(DS3231_READ);
 	fecha->Day = (I2C_Read(NACK)) & MASK_DAY;
 	fecha->Month = (I2C_Read(NACK)) & MASK_MES;

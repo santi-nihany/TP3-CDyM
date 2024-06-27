@@ -6,13 +6,9 @@ DHT11.c
 
 I2C.c
 
-lcd.c
-
 main.c
 
 RTC.c
 
 serialPort.c
-
-utils.c
 
