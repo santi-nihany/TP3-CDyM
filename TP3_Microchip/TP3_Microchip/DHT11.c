@@ -1,12 +1,7 @@
-/*
- * CFile1.c
- *
- */
 #define F_CPU 16000000UL
 #define PIN 0
 #include <avr/io.h>
 #include <util/delay.h>
-#include <string.h>
 #include <stdio.h>
 
 

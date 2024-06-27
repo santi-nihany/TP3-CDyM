@@ -1,16 +1,16 @@
 #define F_CPU 16000000UL
-#define BAUD 9600
 
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdio.h>
-#include <util/setbaud.h>
 
-#include "UART.h"
 #include "DHT11.h"
-#include "lcd.h"
-#include "utils.h"
+#include "RTC.h"
+#include "SerialPort.h"
 
+#define BR9600 (0x67)
+volatile char RX_Buffer=0;
+uint8_t parar = 0;
 
 int main(void)
 {
@@ -18,47 +18,65 @@ int main(void)
 	uint8_t temperatura_dec;
 	uint8_t humedad_int;
 	uint8_t humedad_dec;
+	RTC_t currentTime;
+	char mensaje[100]; // Define mensaje buffer
+	// Configuracion UART
+	SerialPort_Init(BR9600); 
+	SerialPort_TX_Enable();
+	SerialPort_RX_Enable();
+	SerialPort_Send_String("Presionando S se detiene/reanuda el sistema\n\r");
+	SerialPort_RX_Interrupt_Enable();
+	
+	sei();
+	
 	
 	DHT11_init();
-	UART_init();
-	
+	/* Para settear el tiempo en Proteus
+	currentTime.hora.Second = dec_to_bcd(0);
+	currentTime.hora.Minute = dec_to_bcd(0);
+	currentTime.hora.Hour = dec_to_bcd(12);
+	currentTime.fecha.Day = dec_to_bcd(23);
+	currentTime.fecha.Month = dec_to_bcd(6);
+	currentTime.fecha.Year = dec_to_bcd(24);
+	*/
+	RTC_Init();
 	_delay_ms(10);
-	LCD_Init();
-	_delay_ms(100);
+	//RTC_SetTime(&currentTime); //Para settear el tiempo en Proteus
+	
 	
 	while (1) {
-		uint8_t status = DHT11_read(&temperatura_int, &temperatura_dec ,&humedad_int, &humedad_dec );
-		if (status) {
-			LCDclr();
-			printf("Temperatura = %d.%d\n\r", temperatura_int, temperatura_dec);
-			printf("Humedad = %d.%d\n\r", humedad_int, humedad_dec);
-			
-			LCDGotoXY(0,0);
-			LCDstring("Temp: ",strlen("Temp: "));
-			LCDescribeDato(temperatura_int,2);
-			LCDstring(".",strlen("."));
-			LCDescribeDato(temperatura_dec,2);
-			LCDstring(" C",strlen(" C"));
-			LCDGotoXY(0,1);
-			LCDstring("Hum: ",strlen("Hum: "));
-			LCDescribeDato(humedad_int,2);
-			LCDstring(".",strlen("."));
-			LCDescribeDato(humedad_dec,2);
-			LCDstring(" %",strlen(" %"));
-			
-			_delay_ms(100);
-			/*sprintf(temperatura_int, "%d", temperatura_int);
-			sprintf(humedad_int, "%d", humedad_int);
-			Sol_error();
-			escribir(temperatura_int, humedad_int);*/
-		} else {
-			printf("ERROR\n\r");
-			LCDclr();
-			_delay_ms(100);
-			LCDstring("ERROR", 5);
+		if(RX_Buffer){
+			if ((RX_Buffer == 's')||(RX_Buffer == 'S')){
+				parar = !parar;
+				if(parar){
+					SerialPort_Send_String("Recepcion detenida\n\r");
+					} else {
+					SerialPort_Send_String("Recepcion reanudada\n\r");
+				}
+			}
+			RX_Buffer=0;
 		}
-		_delay_ms(2000);
+		if(!parar){
+			RTC_GetTime(&currentTime);
+			uint8_t day = bcd_to_dec(currentTime.fecha.Day);
+			uint8_t month = bcd_to_dec(currentTime.fecha.Month);
+			uint8_t year = bcd_to_dec(currentTime.fecha.Year);
+			uint8_t hour = bcd_to_dec(currentTime.hora.Hour);
+			uint8_t minute = bcd_to_dec(currentTime.hora.Minute);
+			uint8_t second = bcd_to_dec(currentTime.hora.Second);
+			uint8_t status = DHT11_read(&temperatura_int, &temperatura_dec ,&humedad_int, &humedad_dec );
+				
+			if (status) {
+				sprintf(mensaje, "TEMP: %d C HUM: %d %% FECHA: %02d/%02d/%02d HORA: %02d:%02d:%02d\n\r",temperatura_int, humedad_int, day, month, year, hour, minute, second);
+				SerialPort_Send_String(mensaje);
+			} else {
+				SerialPort_Send_String("ERROR\n\r");
+			}
+			_delay_ms(2000);
+		}
 	}
+}
 
-	
+ISR(USART_RX_vect){
+	RX_Buffer = UDR0;
 }

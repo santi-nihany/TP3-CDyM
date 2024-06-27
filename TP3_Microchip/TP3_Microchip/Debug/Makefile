@@ -38,9 +38,10 @@ SUBDIRS :=
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../DHT11.c \
-../lcd.c \
+../I2C.c \
 ../main.c \
-../utils.c
+../RTC.c \
+../serialPort.c
 
 
 PREPROCESSING_SRCS += 
@@ -51,27 +52,31 @@ ASM_SRCS +=
 
 OBJS +=  \
 DHT11.o \
-lcd.o \
+I2C.o \
 main.o \
-utils.o
+RTC.o \
+serialPort.o
 
 OBJS_AS_ARGS +=  \
 DHT11.o \
-lcd.o \
+I2C.o \
 main.o \
-utils.o
+RTC.o \
+serialPort.o
 
 C_DEPS +=  \
 DHT11.d \
-lcd.d \
+I2C.d \
 main.d \
-utils.d
+RTC.d \
+serialPort.d
 
 C_DEPS_AS_ARGS +=  \
 DHT11.d \
-lcd.d \
+I2C.d \
 main.d \
-utils.d
+RTC.d \
+serialPort.d
 
 OUTPUT_FILE_PATH +=TP3_Microchip.elf
 
@@ -94,7 +99,7 @@ LINKER_SCRIPT_DEP+=
 	@echo Finished building: $<
 	
 
-./lcd.o: .././lcd.c
+./I2C.o: .././I2C.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)G:\MicrochipStudio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"G:\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.6.364\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "G:\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
@@ -108,7 +113,14 @@ LINKER_SCRIPT_DEP+=
 	@echo Finished building: $<
 	
 
-./utils.o: .././utils.c
+./RTC.o: .././RTC.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)G:\MicrochipStudio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"G:\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.6.364\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "G:\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+./serialPort.o: .././serialPort.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)G:\MicrochipStudio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"G:\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.6.364\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "G:\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
