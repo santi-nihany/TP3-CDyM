@@ -42,8 +42,6 @@ typedef struct {
 #define DS3231_WRITE (DS3231_ADDRESS << 1)
 
 void RTC_Init(void);
-uint8_t DS3231_GetReg(uint8_t address);
-void DS3231_SetReg(uint8_t address, uint8_t val);
 
 void RTC_SetHora(Hora_t *hora);
 void RTC_SetFecha(Fecha_t *fecha);

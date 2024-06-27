@@ -32,27 +32,21 @@ int main(void)
 	
 	
 	DHT11_init();
-	SerialPort_Send_String("1");
-	currentTime.hora.Second = dec_to_bcd(1);
-	currentTime.hora.Minute = dec_to_bcd(1);
+	currentTime.hora.Second = dec_to_bcd(0);
+	currentTime.hora.Minute = dec_to_bcd(0);
 	currentTime.hora.Hour = dec_to_bcd(12);
-	currentTime.fecha.Day = dec_to_bcd(9);
+	currentTime.fecha.Day = dec_to_bcd(23);
 	currentTime.fecha.Month = dec_to_bcd(6);
 	currentTime.fecha.Year = dec_to_bcd(24);
 	RTC_Init();
-	SerialPort_Send_String("2");
 	_delay_ms(10);
-	SerialPort_Send_String("3");
-	//RTC_SetTime(&currentTime);
-	SerialPort_Send_String("4");
+	RTC_SetTime(&currentTime);
 	
 	
 	while (1) {
-		SerialPort_Send_String("5");
 		if(RX_Buffer){
-			if(RX_Buffer == 's'){
+			if ((RX_Buffer == 's')||(RX_Buffer == 'S')){
 				dejarDeRecibir = !dejarDeRecibir;
-				
 				if(dejarDeRecibir){
 					SerialPort_Send_String("Recepcion detenida\n\r");
 					} else {
@@ -62,21 +56,16 @@ int main(void)
 			RX_Buffer=0;
 		}
 		if(!dejarDeRecibir){
-			SerialPort_Send_String("6");
 			RTC_GetTime(&currentTime);
-			SerialPort_Send_String("7");
 			uint8_t day = bcd_to_dec(currentTime.fecha.Day);
 			uint8_t month = bcd_to_dec(currentTime.fecha.Month);
 			uint8_t year = bcd_to_dec(currentTime.fecha.Year);
 			uint8_t hour = bcd_to_dec(currentTime.hora.Hour);
 			uint8_t minute = bcd_to_dec(currentTime.hora.Minute);
 			uint8_t second = bcd_to_dec(currentTime.hora.Second);
-			SerialPort_Send_String("7");
 			uint8_t status = DHT11_read(&temperatura_int, &temperatura_dec ,&humedad_int, &humedad_dec );
-			SerialPort_Send_String("8");
 				
 			if (status) {
-				// Formatting message into the buffer
 				sprintf(mensaje, "TEMP: %d C HUM: %d %% FECHA: %02d/%02d/%02d HORA: %02d:%02d:%02d\n\r",temperatura_int, humedad_int, day, month, year, hour, minute, second);
 				SerialPort_Send_String(mensaje);
 				} else {
